@@ -1,0 +1,20 @@
+# Local editor and TypeScript artifacts
+.vscode/
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+installer/bin/
+installer/obj/
+release/
+
+# Executables and release packages
+*.exe
+ProfileActivityFirst-*-installer/
+ProfileActivityFirst-*-installer.zip
+
+# Local environment files and logs
+.env
+.env.*
+!.env.example
+*.log
