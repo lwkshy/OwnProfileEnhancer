@@ -108,7 +108,7 @@ function scheduleSync(): void {
 export default definePlugin({
     name: "ProfileActivityFirst",
     description: "Opens any profile on Activity and can hide its Board tab.",
-    authors: [{ name: "lwkshy", id: 0n }],
+    authors: [{ name: "ProfileActivityFirst", id: 0n }],
     settings,
 
     start() {
