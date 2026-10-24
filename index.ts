@@ -3,7 +3,7 @@ import definePlugin, { OptionType } from "@utils/types";
 
 let observer: MutationObserver | undefined;
 let animationFrame: number | undefined;
-let editorWasHandled = false;
+let lastHandledTabList: HTMLElement | null = null;
 const boardTabDisplay = new Map<HTMLElement, { value: string; priority: string }>();
 
 const settings = definePluginSettings({
@@ -40,17 +40,18 @@ function findTab(label: string): HTMLElement | undefined {
 }
 
 function selectActivityOnOpen(): void {
-    // Run only once each time a profile is open, without interrupting
-    // the user's later tab choices.
-    if (editorWasHandled) return;
-
+    // Click Activity once per profile open, without interrupting the user's
+    // later tab choices. Resets when the profile (and its tablist) changes.
     const activityTab = findTab("Activity");
     if (!activityTab) {
-        editorWasHandled = false;
+        lastHandledTabList = null;
         return;
     }
 
-    editorWasHandled = true;
+    const tabList = activityTab.closest('[role="tablist"]');
+    if (tabList === lastHandledTabList) return;
+
+    lastHandledTabList = tabList;
     activityTab.click();
 }
 
@@ -108,7 +109,7 @@ function scheduleSync(): void {
 export default definePlugin({
     name: "ProfileActivityFirst",
     description: "Opens any profile on Activity and can hide its Board tab.",
-    authors: [{ name: "ProfileActivityFirst", id: 0n }],
+    authors: [{ name: "lwkshy", id: 0n }],
     settings,
 
     start() {
@@ -134,7 +135,7 @@ export default definePlugin({
             animationFrame = undefined;
         }
 
-        editorWasHandled = false;
+        lastHandledTabList = null;
         restoreBoardTabs();
     }
 });

@@ -81,4 +81,4 @@ Run the installer and click "Uninstall". It remove the plugin without touching a
 
 ## Privacy
 
-This source package contains no credentials or personal paths. The plugin metadata uses the project name as the author identity. The README references the project's GitHub repository for installer downloads.
+This source package contains no credentials, personal paths, or contact details.
