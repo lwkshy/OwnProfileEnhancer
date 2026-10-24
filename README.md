@@ -7,6 +7,8 @@ It includes an optional **Hide Board on own profile** setting. When enabled, it 
 > [!IMPORTANT]
 > This is a **custom Vencord user plugin**. It cannot be installed directly through the regular, prebuilt Vencord installation. You must build Vencord from source and add the plugin to that build.
 
+<img src="https://i.ibb.co/C3r6ZdGk/Screenshot-2026-10-24-154759.png" width="" alt="Preview">
+
 ## Requirements
 
 - A Vencord source checkout and a working source-build setup.
