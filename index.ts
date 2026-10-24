@@ -15,35 +15,72 @@ const settings = definePluginSettings({
     }
 });
 
-function findTab(label: string): HTMLElement | undefined {
+function findTabs(label: string): HTMLElement[] {
+    const tabs: HTMLElement[] = [];
     const explicitTabs = Array.from(document.querySelectorAll<HTMLElement>('[role="tab"]'));
-    const explicitMatch = explicitTabs.find(element => element.innerText.trim() === label);
-    if (explicitMatch) return explicitMatch;
+    for (const tab of explicitTabs) {
+        if (tab.innerText.trim() === label) tabs.push(tab);
+    }
+    if (tabs.length > 0) return tabs;
 
     // Fallback for Discord builds that render the tablist without role="tab".
     const tabLists = Array.from(document.querySelectorAll<HTMLElement>('[role="tablist"]'));
     for (const tabList of tabLists) {
         const candidates = Array.from(tabList.querySelectorAll<HTMLElement>('button, [tabindex], [role]'));
-        const match = candidates.find(element => element.innerText.trim() === label);
-        if (match) return match;
+        for (const candidate of candidates) {
+            if (candidate.innerText.trim() === label) tabs.push(candidate);
+        }
     }
 
-    return undefined;
+    return tabs;
 }
 
-function isProfileEditorOpen(): boolean {
-    // Keep this limited to Discord's profile-customization editor.
+function findTab(label: string): HTMLElement | undefined {
+    return findTabs(label)[0];
+}
+
+function isTabOnOwnProfile(tab?: HTMLElement): boolean {
+    const container = tab?.closest<HTMLElement>('[role="dialog"], [class*="userProfile"], [class*="profile"], [class*="root"]') ?? document.body;
+    const containerText = container?.innerText ?? "";
+    const bodyText = document.body?.innerText ?? "";
+
+    if (
+        containerText.includes("Note (only visible to you)") ||
+        containerText.includes("(only visible to you)") ||
+        containerText.includes("Add Connection") ||
+        containerText.includes("Add pronouns")
+    ) {
+        return true;
+    }
+
+    if (
+        bodyText.includes("Avatar & Decoration") &&
+        bodyText.includes("Theme & Banner")
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+function isOwnProfileOpen(): boolean {
     const text = document.body?.innerText ?? "";
-    return text.includes("Avatar & Decoration") && text.includes("Theme & Banner");
+    return (
+        (text.includes("Avatar & Decoration") && text.includes("Theme & Banner")) ||
+        text.includes("Note (only visible to you)") ||
+        text.includes("(only visible to you)") ||
+        text.includes("Add Connection") ||
+        text.includes("Add pronouns")
+    );
 }
 
 function selectActivityOnOpen(): void {
-    if (!isProfileEditorOpen()) {
+    if (!isOwnProfileOpen()) {
         editorWasHandled = false;
         return;
     }
 
-    // Run only once each time the profile editor opens, without interrupting
+    // Run only once each time the profile opens, without interrupting
     // the user's later tab choices.
     if (editorWasHandled) return;
 
@@ -63,25 +100,38 @@ function restoreBoardTabs(): void {
 }
 
 function syncBoardVisibility(): void {
-    const shouldHideBoard = settings.store.hideBoardOnOwnProfile && isProfileEditorOpen();
+    const shouldHideBoard = settings.store.hideBoardOnOwnProfile && isOwnProfileOpen();
     if (!shouldHideBoard) {
         restoreBoardTabs();
         return;
     }
 
-    const boardTab = findTab("Board");
-    if (!boardTab || boardTabDisplay.has(boardTab)) return;
+    // Clean up stale detached tabs
+    for (const [tab] of boardTabDisplay) {
+        if (!document.body.contains(tab)) {
+            boardTabDisplay.delete(tab);
+        }
+    }
 
-    boardTabDisplay.set(boardTab, {
-        value: boardTab.style.getPropertyValue("display"),
-        priority: boardTab.style.getPropertyPriority("display")
-    });
-    boardTab.style.setProperty("display", "none", "important");
+    const boardTabs = findTabs("Board");
+    for (const boardTab of boardTabs) {
+        if (!isTabOnOwnProfile(boardTab)) continue;
 
-    // If the setting is enabled while Board is open, leave the user on a
-    // visible tab rather than an otherwise empty Board pane.
-    if (boardTab.getAttribute("aria-selected") === "true") {
-        findTab("Activity")?.click();
+        if (!boardTabDisplay.has(boardTab)) {
+            boardTabDisplay.set(boardTab, {
+                value: boardTab.style.getPropertyValue("display"),
+                priority: boardTab.style.getPropertyPriority("display")
+            });
+        }
+
+        if (boardTab.style.display !== "none") {
+            boardTab.style.setProperty("display", "none", "important");
+        }
+
+        // If the setting is enabled while Board is selected, switch to Activity
+        if (boardTab.getAttribute("aria-selected") === "true") {
+            findTab("Activity")?.click();
+        }
     }
 }
 
