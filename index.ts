@@ -7,9 +7,9 @@ let editorWasHandled = false;
 const boardTabDisplay = new Map<HTMLElement, { value: string; priority: string }>();
 
 const settings = definePluginSettings({
-    hideBoardOnOwnProfile: {
+    hideBoard: {
         type: OptionType.BOOLEAN,
-        description: "Completely hide the Board tab in your profile editor.",
+        description: "Completely hide the Board tab in profiles.",
         default: false,
         onChange: scheduleSync
     }
@@ -39,53 +39,16 @@ function findTab(label: string): HTMLElement | undefined {
     return findTabs(label)[0];
 }
 
-function isTabOnOwnProfile(tab?: HTMLElement): boolean {
-    const container = tab?.closest<HTMLElement>('[role="dialog"], [class*="userProfile"], [class*="profile"], [class*="root"]') ?? document.body;
-    const containerText = container?.innerText ?? "";
-    const bodyText = document.body?.innerText ?? "";
-
-    if (
-        containerText.includes("Note (only visible to you)") ||
-        containerText.includes("(only visible to you)") ||
-        containerText.includes("Add Connection") ||
-        containerText.includes("Add pronouns")
-    ) {
-        return true;
-    }
-
-    if (
-        bodyText.includes("Avatar & Decoration") &&
-        bodyText.includes("Theme & Banner")
-    ) {
-        return true;
-    }
-
-    return false;
-}
-
-function isOwnProfileOpen(): boolean {
-    const text = document.body?.innerText ?? "";
-    return (
-        (text.includes("Avatar & Decoration") && text.includes("Theme & Banner")) ||
-        text.includes("Note (only visible to you)") ||
-        text.includes("(only visible to you)") ||
-        text.includes("Add Connection") ||
-        text.includes("Add pronouns")
-    );
-}
-
 function selectActivityOnOpen(): void {
-    if (!isOwnProfileOpen()) {
-        editorWasHandled = false;
-        return;
-    }
-
-    // Run only once each time the profile opens, without interrupting
+    // Run only once each time a profile is open, without interrupting
     // the user's later tab choices.
     if (editorWasHandled) return;
 
     const activityTab = findTab("Activity");
-    if (!activityTab) return;
+    if (!activityTab) {
+        editorWasHandled = false;
+        return;
+    }
 
     editorWasHandled = true;
     activityTab.click();
@@ -100,7 +63,7 @@ function restoreBoardTabs(): void {
 }
 
 function syncBoardVisibility(): void {
-    const shouldHideBoard = settings.store.hideBoardOnOwnProfile && isOwnProfileOpen();
+    const shouldHideBoard = settings.store.hideBoard;
     if (!shouldHideBoard) {
         restoreBoardTabs();
         return;
@@ -115,8 +78,6 @@ function syncBoardVisibility(): void {
 
     const boardTabs = findTabs("Board");
     for (const boardTab of boardTabs) {
-        if (!isTabOnOwnProfile(boardTab)) continue;
-
         if (!boardTabDisplay.has(boardTab)) {
             boardTabDisplay.set(boardTab, {
                 value: boardTab.style.getPropertyValue("display"),
@@ -146,7 +107,7 @@ function scheduleSync(): void {
 
 export default definePlugin({
     name: "ProfileActivityFirst",
-    description: "Opens your profile editor on Activity and can hide its Board tab.",
+    description: "Opens any profile on Activity and can hide its Board tab.",
     authors: [{ name: "lwkshy", id: 0n }],
     settings,
 
