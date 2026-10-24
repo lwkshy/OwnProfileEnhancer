@@ -69,6 +69,12 @@ When this repository is opened on its own, VS Code uses `vencord-editor.d.ts` to
 
 ## Uninstall
 
+### Installer
+
+Run the installer and click "Uninstall". It remove the plugin without touching anything else.
+
+### Manually
+
 1. Disable **ProfileActivityFirst** in Vencord's plugin settings, or remove `src/userplugins/profileActivityFirst/` from your Vencord source folder.
 2. If you remove the source folder, rebuild Vencord with `pnpm build` and update your installed build as needed.
 3. Restart Discord.
