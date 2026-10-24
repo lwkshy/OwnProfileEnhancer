@@ -5,7 +5,7 @@ A small custom Vencord user plugin that selects the **Activity** tab when Discor
 It includes an optional **Hide Board on own profile** setting. When enabled, it hides the **Board** tab only in your own profile editor; it does not alter other users' profiles. **Wishlist** remains available.
 
 > [!IMPORTANT]
-> This is a **custom Vencord user plugin**. It cannot be installed directly through the regular, prebuilt Vencord installation. You must build Vencord from source and add the plugin to that build.
+> This is a **custom Vencord user plugin**. It cannot be installed directly through the regular, prebuilt Vencord installation. You must build Vencord from source and add the plugin to that build or use the [installer](https://github.com/lwkshy/ProfileActivityFirst/releases).
 
 <img src="https://i.ibb.co/C3r6ZdGk/Screenshot-2026-10-24-154759.png" width="" alt="Preview">
 
