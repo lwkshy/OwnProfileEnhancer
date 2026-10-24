@@ -17,20 +17,13 @@ It includes an optional **Hide Board** setting. When enabled, it hides the **Boa
 
 If you have only installed Vencord using its normal installer, start with Vencord's [Installing from Source guide](https://docs.vencord.dev/installing/), then read the [official custom-plugin instructions](https://docs.vencord.dev/installing/custom-plugins/).
 
-### Windows installer
+## Windows installer
 
 `ProfileActivityFirstInstaller.exe` includes a complete built Vencord payload and patches Discord Stable directly. It asks you to close Discord before installation and offers to restart it afterward. No Vencord source checkout, Node.js, or pnpm is required.
 
 Discord and Vencord settings are preserved because the installer patches only Discord's installed application files; it does not modify the separate Discord user-data store. Because Vencord packages plugins into one compiled payload, installing this build replaces the recipient's compiled Vencord payload; separately compiled custom plugins must be added to this build before distribution.
 
-### [Download Installer](https://github.com/lwkshy/ProfileActivityFirst/releases)
-
-## Behavior
-
-- Selects **Activity** when any profile opens.
-- Optionally hides **Board** in any profile.
-- Leaves **Wishlist** visible and usable.
-- Does not force you back to Activity when you manually switch to another tab.
+#### [Download Installer](https://github.com/lwkshy/ProfileActivityFirst/releases)
 
 ## Build from Vencord source
 
@@ -56,6 +49,13 @@ These steps are for **Discord Desktop** and assume you have already set up a Ven
 7. Start Discord and open **User Settings → Vencord → Plugins**. Enable **ProfileActivityFirst** if it is not already enabled.
 
 For other clients or platforms, follow Vencord's [custom-build installation instructions](https://docs.vencord.dev/installing/).
+
+## Behavior
+
+- Selects **Activity** when any profile opens.
+- Optionally hides **Board** in any profile.
+- Leaves **Wishlist** visible and usable.
+- Does not force you back to Activity when you manually switch to another tab.
 
 ## Limitations
 
