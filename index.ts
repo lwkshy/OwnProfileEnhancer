@@ -142,7 +142,7 @@ function scheduleSync(): void {
 }
 
 export default definePlugin({
-    name: "ProfileActivityFirst",
+    name: "OwnProfileEnhancer",
     description: "Opens profiles on Activity and collapses your styles editor by default.",
     authors: [{ name: "lwkshy", id: 0n }],
     settings,

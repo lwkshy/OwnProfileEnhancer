@@ -10,8 +10,8 @@ release/
 
 # Executables and release packages
 *.exe
-ProfileActivityFirst-*-installer/
-ProfileActivityFirst-*-installer.zip
+OwnProfileEnhancer-*-installer/
+OwnProfileEnhancer-*-installer.zip
 
 # Local environment files and logs
 .env

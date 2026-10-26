@@ -1,11 +1,11 @@
-# ProfileActivityFirst
+# OwnProfileEnhancer
 
 A small custom Vencord user plugin that selects the **Activity** tab when Discord's profile opens.
 
 It opens your own profile with Discord's native styles editor collapsed, so the built-in **Show Styles** button remains available. It also includes an optional **Hide Board** setting. When enabled, it hides the **Board** tab in any profile; it does not alter other profile sections. **Wishlist** remains available.
 
 > [!IMPORTANT]
-> This is a **custom Vencord user plugin**. It cannot be installed directly through the regular, prebuilt Vencord installation. You must build Vencord from source and add the plugin to that build or use the [installer](https://github.com/lwkshy/ProfileActivityFirst/releases).
+> This is a **custom Vencord user plugin**. It cannot be installed directly through the regular, prebuilt Vencord installation. You must build Vencord from source and add the plugin to that build or use the [installer](https://github.com/lwkshy/OwnProfileEnhancer/releases).
 
 <img src="https://i.ibb.co/kpJZCQ0/image.png" width="" alt="Preview">
 
@@ -19,19 +19,19 @@ If you have only installed Vencord using its normal installer, start with Vencor
 
 ## Windows installer
 
-`ProfileActivityFirstInstaller.exe` includes a complete built Vencord payload and patches Discord Stable directly. It asks you to close Discord before installation and offers to restart it afterward. No Vencord source checkout, Node.js, or pnpm is required.
+`OwnProfileEnhancerInstaller.exe` includes a complete built Vencord payload and patches Discord Stable directly. It asks you to close Discord before installation and offers to restart it afterward. No Vencord source checkout, Node.js, or pnpm is required.
 
 Discord and Vencord settings are preserved because the installer patches only Discord's installed application files; it does not modify the separate Discord user-data store. Because Vencord packages plugins into one compiled payload, installing this build replaces the recipient's compiled Vencord payload; separately compiled custom plugins must be added to this build before distribution.
 
-#### [Download Installer](https://github.com/lwkshy/ProfileActivityFirst/releases)
+#### [Download Installer](https://github.com/lwkshy/OwnProfileEnhancer/releases)
 
 ## Build from Vencord source
 
 These steps are for **Discord Desktop** and assume you have already set up a Vencord source checkout.
 
 1. Download or clone this repository.
-2. In your Vencord source folder, create `src/userplugins/profileActivityFirst/` if it does not already exist.
-3. Copy this repository's `index.ts` into that folder. The resulting path should be `Vencord/src/userplugins/profileActivityFirst/index.ts`.
+2. In your Vencord source folder, create `src/userplugins/ownProfileEnhancer/` if it does not already exist.
+3. Copy this repository's `index.ts` into that folder. The resulting path should be `Vencord/src/userplugins/ownProfileEnhancer/index.ts`.
 4. Fully close Discord.
 5. Open a terminal in the Vencord source root and run:
 
@@ -46,7 +46,7 @@ These steps are for **Discord Desktop** and assume you have already set up a Ven
    ```
 
    Follow the Vencord Installer prompts and select the Discord installation you use.
-7. Start Discord and open **User Settings → Vencord → Plugins**. Enable **ProfileActivityFirst** if it is not already enabled.
+7. Start Discord and open **User Settings → Vencord → Plugins**. Enable **OwnProfileEnhancer** if it is not already enabled.
 
 For other clients or platforms, follow Vencord's [custom-build installation instructions](https://docs.vencord.dev/installing/).
 
@@ -76,7 +76,7 @@ Run the installer and click "Uninstall". It removes the plugin without touching 
 
 ### Manually
 
-1. Disable **ProfileActivityFirst** in Vencord's plugin settings, or remove `src/userplugins/profileActivityFirst/` from your Vencord source folder.
+1. Disable **OwnProfileEnhancer** in Vencord's plugin settings, or remove `src/userplugins/ownProfileEnhancer/` from your Vencord source folder.
 2. If you remove the source folder, rebuild Vencord with `pnpm build` and update your installed build as needed.
 3. Restart Discord.
 

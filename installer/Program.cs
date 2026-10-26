@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
 
-namespace ProfileActivityFirstInstaller;
+namespace OwnProfileEnhancerInstaller;
 
 internal static class Program
 {
@@ -24,14 +24,14 @@ internal sealed class InstallerForm : Form
 
     public InstallerForm()
     {
-        Text = "ProfileActivityFirst Installer";
+        Text = "OwnProfileEnhancer Installer";
         ClientSize = new Size(600, 300);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
-        var title = new Label { Text = "ProfileActivityFirst", Font = new Font(Font.FontFamily, 24), Location = new Point(24, 22), Size = new Size(550, 45), TextAlign = ContentAlignment.MiddleCenter };
-        var notice = new Label { Text = "This installer includes a complete Vencord build with ProfileActivityFirst. It preserves Discord and Vencord settings, but replaces the installed compiled Vencord payload.", Location = new Point(36, 88), Size = new Size(528, 55), BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(10) };
+        var title = new Label { Text = "OwnProfileEnhancer", Font = new Font(Font.FontFamily, 24), Location = new Point(24, 22), Size = new Size(550, 45), TextAlign = ContentAlignment.MiddleCenter };
+        var notice = new Label { Text = "This installer includes a complete Vencord build with OwnProfileEnhancer. It preserves Discord and Vencord settings, but replaces the installed compiled Vencord payload.", Location = new Point(36, 88), Size = new Size(528, 55), BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(10) };
         var heading = new Label { Text = "Discord installation to patch", Font = new Font(Font, FontStyle.Bold), Location = new Point(36, 162), Size = new Size(300, 25) };
         var path = new Label { Text = Directory.Exists(discordDirectory) ? discordDirectory : "Discord Stable was not detected.", Location = new Point(54, 191), Size = new Size(510, 25) };
         status.Location = new Point(36, 248);
@@ -70,7 +70,7 @@ internal sealed class InstallerForm : Form
             await Task.Run(Inject);
             status.Text = "Installation complete. Starting Discord...";
             RestartDiscord();
-            MessageBox.Show(this, "ProfileActivityFirst was installed successfully. Discord has been restarted.", "Installation complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "OwnProfileEnhancer was installed successfully. Discord has been restarted.", "Installation complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             status.Text = "Installation complete.";
         }
         catch (Exception error)
@@ -95,13 +95,13 @@ internal sealed class InstallerForm : Form
         uninstall.Enabled = false;
         try
         {
-            status.Text = "Removing ProfileActivityFirst...";
+            status.Text = "Removing OwnProfileEnhancer...";
             var restoredStandardVencord = await Task.Run(Uninject);
             status.Text = "Starting Discord...";
             RestartDiscord();
             var message = restoredStandardVencord
-                ? "ProfileActivityFirst was removed and standard Vencord was restored. Discord has been restarted."
-                : "ProfileActivityFirst was uninstalled successfully. Discord has been restarted.";
+                ? "OwnProfileEnhancer was removed and standard Vencord was restored. Discord has been restarted."
+                : "OwnProfileEnhancer was uninstalled successfully. Discord has been restarted.";
             MessageBox.Show(this, message, "Uninstallation complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             status.Text = "Uninstallation complete.";
         }
@@ -133,14 +133,14 @@ internal sealed class InstallerForm : Form
 
     private void Inject()
     {
-        var profileActivityFirstDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ProfileActivityFirst");
-        var distDirectory = Path.Combine(profileActivityFirstDir, "dist");
+        var ownProfileEnhancerDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OwnProfileEnhancer");
+        var distDirectory = Path.Combine(ownProfileEnhancerDir, "dist");
         Directory.CreateDirectory(distDirectory);
 
-        var tempCliDirectory = Path.Combine(Path.GetTempPath(), "ProfileActivityFirstInstaller", Guid.NewGuid().ToString("N"));
+        var tempCliDirectory = Path.Combine(Path.GetTempPath(), "OwnProfileEnhancerInstaller", Guid.NewGuid().ToString("N"));
         try
         {
-            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ProfileActivityFirst.VencordBuild.zip") ?? throw new InvalidOperationException("The included Vencord build is missing.");
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OwnProfileEnhancer.VencordBuild.zip") ?? throw new InvalidOperationException("The included Vencord build is missing.");
             using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
 
             string? cli = null;
@@ -183,7 +183,7 @@ internal sealed class InstallerForm : Form
                     RedirectStandardOutput = true
                 }
             };
-            process.StartInfo.Environment["VENCORD_USER_DATA_DIR"] = profileActivityFirstDir;
+            process.StartInfo.Environment["VENCORD_USER_DATA_DIR"] = ownProfileEnhancerDir;
             process.StartInfo.Environment["VENCORD_DEV_INSTALL"] = "1";
             var output = RunInstaller(process);
             if (process.ExitCode != 0) throw new InvalidOperationException($"Vencord installation failed.\n\n{output}");
@@ -198,10 +198,10 @@ internal sealed class InstallerForm : Form
         var standardPatcher = Path.Combine(standardVencordDir, "dist", "patcher.js");
         var hasStandardVencord = File.Exists(standardPatcher);
 
-        var tempCliDirectory = Path.Combine(Path.GetTempPath(), "ProfileActivityFirstInstaller", Guid.NewGuid().ToString("N"));
+        var tempCliDirectory = Path.Combine(Path.GetTempPath(), "OwnProfileEnhancerInstaller", Guid.NewGuid().ToString("N"));
         try
         {
-            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ProfileActivityFirst.VencordBuild.zip") ?? throw new InvalidOperationException("The included Vencord build is missing.");
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OwnProfileEnhancer.VencordBuild.zip") ?? throw new InvalidOperationException("The included Vencord build is missing.");
             using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
 
             string? cli = null;
@@ -260,10 +260,10 @@ internal sealed class InstallerForm : Form
                 if (process.ExitCode != 0) throw new InvalidOperationException($"Uninstallation failed.\n\n{output}");
             }
 
-            var profileActivityFirstDir = Path.Combine(appData, "ProfileActivityFirst");
-            if (Directory.Exists(profileActivityFirstDir))
+            var ownProfileEnhancerDir = Path.Combine(appData, "OwnProfileEnhancer");
+            if (Directory.Exists(ownProfileEnhancerDir))
             {
-                try { Directory.Delete(profileActivityFirstDir, recursive: true); } catch { /* best effort */ }
+                try { Directory.Delete(ownProfileEnhancerDir, recursive: true); } catch { /* best effort */ }
             }
 
             return hasStandardVencord;
