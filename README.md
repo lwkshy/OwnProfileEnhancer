@@ -7,7 +7,7 @@ It opens your own profile with Discord's native styles editor collapsed, so the 
 > [!IMPORTANT]
 > This is a **custom Vencord user plugin**. It cannot be installed directly through the regular, prebuilt Vencord installation. You must build Vencord from source and add the plugin to that build or use the [installer](https://github.com/lwkshy/OwnProfileEnhancer/releases).
 
-<img src="https://i.ibb.co/kpJZCQ0/image.png" width="" alt="Preview">
+<img src="https://i.ibb.co/1Gh2vsMh/Screenshot-2026-10-26-164325.png" width="" alt="Preview">
 
 ## Requirements
 
