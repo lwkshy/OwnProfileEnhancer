@@ -4,9 +4,16 @@ import definePlugin, { OptionType } from "@utils/types";
 let observer: MutationObserver | undefined;
 let animationFrame: number | undefined;
 let lastHandledTabList: HTMLElement | null = null;
+let lastHandledOwnProfile: HTMLElement | null = null;
 const boardTabDisplay = new Map<HTMLElement, { value: string; priority: string }>();
 
 const settings = definePluginSettings({
+    hideOwnProfileEditor: {
+        type: OptionType.BOOLEAN,
+        description: "Open your profile with its styles editor collapsed.",
+        default: true,
+        onChange: scheduleSync
+    },
     hideBoard: {
         type: OptionType.BOOLEAN,
         description: "Completely hide the Board tab in profiles.",
@@ -48,11 +55,38 @@ function selectActivityOnOpen(): void {
         return;
     }
 
-    const tabList = activityTab.closest('[role="tablist"]');
+    const tabList = activityTab.closest<HTMLElement>('[role="tablist"]');
     if (tabList === lastHandledTabList) return;
 
     lastHandledTabList = tabList;
     activityTab.click();
+}
+
+function findStylesButton(label: string): HTMLElement | undefined {
+    const candidates = Array.from(document.querySelectorAll<HTMLElement>('button, [role="button"]'));
+    return candidates.find(candidate => [
+        candidate.getAttribute("aria-label"),
+        candidate.getAttribute("data-tooltip-content"),
+        candidate.getAttribute("title")
+    ].some(value => value?.trim() === label));
+}
+
+function collapseOwnProfileEditor(): void {
+    if (lastHandledOwnProfile && !document.body.contains(lastHandledOwnProfile)) {
+        lastHandledOwnProfile = null;
+    }
+
+    const hideStylesButton = findStylesButton("Hide Styles");
+    const showStylesButton = findStylesButton("Show Styles");
+    const stylesButton = hideStylesButton ?? showStylesButton;
+    const profile = stylesButton?.closest<HTMLElement>('[role="dialog"], [aria-modal="true"]');
+
+    if (!profile || profile === lastHandledOwnProfile) return;
+
+    // Use Discord's native legacy toggle instead of changing panel styles. This
+    // keeps the normal Show Styles button available for opening it again.
+    lastHandledOwnProfile = profile;
+    if (settings.store.hideOwnProfileEditor) hideStylesButton?.click();
 }
 
 function restoreBoardTabs(): void {
@@ -102,13 +136,14 @@ function scheduleSync(): void {
     animationFrame = requestAnimationFrame(() => {
         animationFrame = undefined;
         selectActivityOnOpen();
+        collapseOwnProfileEditor();
         syncBoardVisibility();
     });
 }
 
 export default definePlugin({
     name: "ProfileActivityFirst",
-    description: "Opens any profile on Activity and can hide its Board tab.",
+    description: "Opens profiles on Activity and collapses your styles editor by default.",
     authors: [{ name: "lwkshy", id: 0n }],
     settings,
 
@@ -123,6 +158,7 @@ export default definePlugin({
         }
 
         selectActivityOnOpen();
+        collapseOwnProfileEditor();
         syncBoardVisibility();
     },
 
@@ -136,6 +172,7 @@ export default definePlugin({
         }
 
         lastHandledTabList = null;
+        lastHandledOwnProfile = null;
         restoreBoardTabs();
     }
 });

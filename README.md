@@ -2,7 +2,7 @@
 
 A small custom Vencord user plugin that selects the **Activity** tab when Discord's profile opens.
 
-It includes an optional **Hide Board** setting. When enabled, it hides the **Board** tab in any profile; it does not alter other profile sections. **Wishlist** remains available.
+It opens your own profile with Discord's native styles editor collapsed, so the built-in **Show Styles** button remains available. It also includes an optional **Hide Board** setting. When enabled, it hides the **Board** tab in any profile; it does not alter other profile sections. **Wishlist** remains available.
 
 > [!IMPORTANT]
 > This is a **custom Vencord user plugin**. It cannot be installed directly through the regular, prebuilt Vencord installation. You must build Vencord from source and add the plugin to that build or use the [installer](https://github.com/lwkshy/ProfileActivityFirst/releases).
@@ -53,6 +53,7 @@ For other clients or platforms, follow Vencord's [custom-build installation inst
 ## Behavior
 
 - Selects **Activity** when any profile opens.
+- Collapses your own profile's styles editor through Discord's native toggle; use **Show Styles** to reopen it.
 - Optionally hides **Board** in any profile.
 - Leaves **Wishlist** visible and usable.
 - Does not force you back to Activity when you manually switch to another tab.
@@ -71,7 +72,7 @@ When this repository is opened on its own, VS Code uses `vencord-editor.d.ts` to
 
 ### Installer
 
-Run the installer and click "Uninstall". It remove the plugin without touching anything else.
+Run the installer and click "Uninstall". It removes the plugin without touching anything else.
 
 ### Manually
 

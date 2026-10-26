@@ -185,9 +185,7 @@ internal sealed class InstallerForm : Form
             };
             process.StartInfo.Environment["VENCORD_USER_DATA_DIR"] = profileActivityFirstDir;
             process.StartInfo.Environment["VENCORD_DEV_INSTALL"] = "1";
-            process.Start();
-            var output = process.StandardOutput.ReadToEnd() + process.StandardError.ReadToEnd();
-            process.WaitForExit();
+            var output = RunInstaller(process);
             if (process.ExitCode != 0) throw new InvalidOperationException($"Vencord installation failed.\n\n{output}");
         }
         finally { if (Directory.Exists(tempCliDirectory)) Directory.Delete(tempCliDirectory, recursive: true); }
@@ -242,9 +240,7 @@ internal sealed class InstallerForm : Form
                 };
                 process.StartInfo.Environment["VENCORD_USER_DATA_DIR"] = standardVencordDir;
                 process.StartInfo.Environment["VENCORD_DEV_INSTALL"] = "1";
-                process.Start();
-                var output = process.StandardOutput.ReadToEnd() + process.StandardError.ReadToEnd();
-                process.WaitForExit();
+                var output = RunInstaller(process);
                 if (process.ExitCode != 0) throw new InvalidOperationException($"Failed to restore standard Vencord.\n\n{output}");
             }
             else
@@ -260,9 +256,7 @@ internal sealed class InstallerForm : Form
                         RedirectStandardOutput = true
                     }
                 };
-                process.Start();
-                var output = process.StandardOutput.ReadToEnd() + process.StandardError.ReadToEnd();
-                process.WaitForExit();
+                var output = RunInstaller(process);
                 if (process.ExitCode != 0) throw new InvalidOperationException($"Uninstallation failed.\n\n{output}");
             }
 
@@ -275,5 +269,15 @@ internal sealed class InstallerForm : Form
             return hasStandardVencord;
         }
         finally { if (Directory.Exists(tempCliDirectory)) Directory.Delete(tempCliDirectory, recursive: true); }
+    }
+
+    private static string RunInstaller(Process process)
+    {
+        process.Start();
+        var standardOutput = process.StandardOutput.ReadToEndAsync();
+        var standardError = process.StandardError.ReadToEndAsync();
+        process.WaitForExit();
+        Task.WaitAll(standardOutput, standardError);
+        return standardOutput.Result + standardError.Result;
     }
 }
