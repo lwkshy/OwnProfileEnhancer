@@ -1,6 +1,6 @@
 # OwnProfileEnhancer
 
-A small custom Vencord user plugin that selects the **Activity** tab when Discord's profile opens.
+Vencord plugin that opens profiles without the profile editor panel and on "Activity" tab by default for everyone, and can hide the "Board" tab completely
 
 It opens your own profile with Discord's native styles editor collapsed, so the built-in **Show Styles** button remains available. It also includes an optional **Hide Board** setting. When enabled, it hides the **Board** tab in any profile; it does not alter other profile sections. **Wishlist** remains available.
 
